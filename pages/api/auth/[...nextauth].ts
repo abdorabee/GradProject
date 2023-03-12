@@ -2,9 +2,20 @@ import NextAuth from "next-auth/next";
 import Credentials from "next-auth/providers/credentials";
 import prismadb from "@/lib/prismadb";
 import { compare } from "bcryptjs";
+import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 export default NextAuth({
   providers: [
+    GithubProvider({
+      clientId: process.env.GITHUB_ID || "",
+      clientSecret: process.env.GITHUB_SECRET || ""
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
+    }),
     Credentials({
       id: "credentials",
       name: "Credentials",
@@ -38,23 +49,24 @@ export default NextAuth({
           user.hashedPassword
         );
 
-        if(!isCorrectPassword){
-            throw new Error("Incorrect password ");
+        if (!isCorrectPassword) {
+          throw new Error("Incorrect password ");
         }
 
         return user;
       }
     })
   ],
-  pages:{
-    signIn:'/auth',
+  pages: {
+    signIn: "/auth"
   },
-  debug: process.env.NODE_ENV === 'development',
-  session:{
-    strategy:'jwt',
+  debug: process.env.NODE_ENV === "development",
+  adapter: PrismaAdapter(prismadb),
+  session: {
+    strategy: "jwt"
   },
-  jwt:{
-    secret: process.env.NEXTAUTH_JWT_SECRET,
+  jwt: {
+    secret: process.env.NEXTAUTH_JWT_SECRET
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET
 });
