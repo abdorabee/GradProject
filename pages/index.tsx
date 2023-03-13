@@ -4,25 +4,24 @@ import { redirect } from "next/dist/server/api-utils";
 import "tailwindcss/tailwind.css";
 import useCurrentUser from "@/hooks/useCurrentUser";
 
-
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  // if (!session) {
-  //   return {
-  //     redirect: {
-  //       destination: "/auth",
-  //       permanent: false
-  //     }
-  //   };
-  // }
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false,
+      },
+    };
+  }
 
   return {
-    props:{}
-  }
+    props: {},
+  };
 }
 
 export default function Home() {
-  const {data:user}= useCurrentUser();
+  const { data: user } = useCurrentUser();
   return (
     <>
       <h1>BETA Movie</h1>
