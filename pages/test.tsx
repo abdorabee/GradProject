@@ -1,6 +1,6 @@
 const MyPage =()=>{
     return(
-    <h1>This is a page and it's working !!</h1>
+    <h1>This is a page and it ks working !!</h1>
     )
 }
 
